@@ -5,19 +5,19 @@ namespace Indexer\File;
 class Item
 {
     private $id;
-    
+
     private $score;
-    
+
     private $md5;
-    
+
     private $type;
-    
+
     private $filename;
-    
+
     private $directory;
-    
+
     private $previewPath;
-    
+
     public function __construct($item)
     {
         $this->id          = $item->id;
@@ -28,7 +28,7 @@ class Item
         $this->type        = $item->type;
         $this->previewPath = $item->previewPath;
     }
-    
+
     public function getId()
     {
         return $this->id;
@@ -38,7 +38,7 @@ class Item
     {
         return $this->score;
     }
-        
+
     public function getMd5()
     {
         return $this->md5;

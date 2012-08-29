@@ -10,7 +10,7 @@ class Manager
 
     public function __construct()
     {
-        $this->config  = new \Zend_Config_Ini(APP_PATH . "/Config/config.ini", 'production');
+        $this->config  = \Config\Ini::getInstance();
         $this->adapter = Adapter\AbstractAdapter::factory($this->config->pool->adapter->name);
     }
 

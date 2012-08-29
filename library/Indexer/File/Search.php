@@ -1,6 +1,6 @@
 <?php
 
-namespace File\Watcher\Descriptor;
+namespace Indexer\File;
 
 class Search extends \Collection\Search
 {

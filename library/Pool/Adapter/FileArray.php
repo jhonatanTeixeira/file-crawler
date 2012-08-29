@@ -10,7 +10,7 @@ class FileArray extends AbstractAdapter
 
     public function __construct()
     {
-        $this->config = new \Zend_Config_Ini(APP_PATH . "/Config/config.ini", 'production');
+        $this->config = \Config\Ini::getInstance();
     }
 
     public function add(array $row)
