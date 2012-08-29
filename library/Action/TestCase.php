@@ -8,5 +8,6 @@ class TestCase extends AbstractAction
     {
         var_dump("executando tarefa da fila", $this->getParams());
         sleep(15);
+        var_dump("terminou de executar");
     }
 }

@@ -4,7 +4,6 @@ namespace File\Watcher\Event;
 
 class Item extends \ArrayObject
 {
-
     private $inotify;
 
     public function __construct(array $event, \File\Watcher\Inotify $inotify)

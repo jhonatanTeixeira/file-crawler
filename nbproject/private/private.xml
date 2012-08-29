@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/home/developer/NetBeansProjects/file_crawler/library/Proccess/Forker.php</file>
-        <file>file:/home/developer/NetBeansProjects/file_crawler/library/Daemon/Pool.php</file>
-        <file>file:/home/developer/NetBeansProjects/file_crawler/library/Daemon/AbstractDaemon.php</file>
-        <file>file:/home/developer/NetBeansProjects/file_crawler/library/Action/AbstractAction.php</file>
-        <file>file:/home/developer/NetBeansProjects/file_crawler/library/Action/testCase.php</file>
-        <file>file:/home/developer/NetBeansProjects/file_crawler/cli/pool.php</file>
-        <file>file:/home/developer/NetBeansProjects/file_crawler/bootstrap.php</file>
-    </open-files>
 </project-private>

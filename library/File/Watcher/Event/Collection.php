@@ -12,7 +12,6 @@ class Collection extends \ArrayIterator
 
         if ($content !== false) {
             parent::__construct($content);
-            //parent::__construct(iterator_to_array(new Filter\NoName(new \ArrayIterator($content))));
         } else {
             parent::__construct();
         }
