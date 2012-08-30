@@ -17,7 +17,6 @@ class Inotify
     public function addFolder(\File\Info $file)
     {
         if (!$this->isWatching($file) && $file->isDir()) {
-            var_dump(__METHOD__);
             $descriptor = inotify_add_watch($this->resource, $file, IN_ALL_EVENTS);
             $this->descriptors[$descriptor] = new Descriptor\Item($this, $descriptor, $file);
         }

@@ -19,9 +19,13 @@ class Manager
         $this->adapter->addFile($file);
     }
 
+    /**
+     * @param \File\Info $file
+     * @return \Indexer\File\Collection
+     */
     public function getDirectoryFiles(\File\Info $file)
     {
-        return $this->adapter->getDirectoryFiles($file);
+        return new File\Collection($this->adapter->getDirectoryFiles($file));
     }
 
     public function removeFile(\File\Info $file)
@@ -29,8 +33,18 @@ class Manager
         $this->adapter->removeFile($file);
     }
 
+    /**
+     * @param type $filename
+     * @return File\Item
+     */
     public function searchFile($filename)
     {
-        return $this->adapter->searchFile($filename);
+        $item = $this->adapter->searchFile($filename);
+        
+        if (empty($item)) {
+            return false;
+        }
+        
+        return new File\Item($item);
     }
 }

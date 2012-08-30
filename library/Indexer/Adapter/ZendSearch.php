@@ -5,15 +5,16 @@ namespace Indexer\Adapter;
 class ZendSearch extends AbstractAdapter
 {
     private $search;
+    
     private $config;
 
     public function __construct()
     {
-        $this->config  = \Config\Ini::getInstance();
+        $this->config = \Config\Ini::getInstance();
 
         try {
             $this->search = \Zend_Search_Lucene::open($this->config->indexer->directory);
-        } catch (Zend_Search_Lucene_Exception $exception) {
+        } catch (\Zend_Search_Lucene_Exception $exception) {
             $this->search = \Zend_Search_Lucene::create($this->config->indexer->directory);
             syslog(LOG_INFO, $exception->getMessage());
         }
@@ -21,6 +22,11 @@ class ZendSearch extends AbstractAdapter
 
     public function addFile(\File\Info $file)
     {
+        if (!empty($this->searchFile($file->getPathname()))) {
+            syslog(LOG_INFO, "file {$file->getPathname()} already indexed");
+            return;
+        }
+        
         $document = new \Zend_Search_Lucene_Document();
         $document->addField(\Zend_Search_Lucene_Field::keyword('md5', $file->getNameMd5()));
         $document->addField(\Zend_Search_Lucene_Field::keyword('type', $file->isDir() ? 'dir' : 'file'));
@@ -38,16 +44,13 @@ class ZendSearch extends AbstractAdapter
 
         $this->search->addDocument($document);
         $this->search->commit();
-        echo $this->search->count();
     }
 
     public function getDirectoryFiles(\File\Info $file)
     {
         $pathName = $file->isDir() ? $file->getPathname() : $file->getPath();
-        $term = new \Zend_Search_Lucene_Index_Term($pathName, 'directory');
-        $query = new \Zend_Search_Lucene_Search_Query_Term($term);
-
-        return new \Indexer\File\Collection($this->search->find($query));
+        
+        return $this->search->find("directory:\"$pathName\"");
     }
 
     public function removeFile(\File\Info $file)
@@ -57,17 +60,14 @@ class ZendSearch extends AbstractAdapter
 
     /**
      * @param string $filename
-     * @return \Indexer\File\Item
+     * @return \Zend_Search_Lucene_Search_QueryHit
      */
     public function searchFile($filename)
     {
-        $term = new \Zend_Search_Lucene_Index_Term($filename, 'filename');
-        $query = new \Zend_Search_Lucene_Search_Query_Term($term);
+        $hash = md5($filename);
+        $files = $this->search->find("md5:$hash");
 
-        $files = new \Indexer\File\Collection($this->search->find($query));
-        $files->rewind();
-
-        return $files->current();
+        return array_shift($files);
     }
 
 }
