@@ -5,7 +5,7 @@ namespace Indexer\Adapter;
 class ZendSearch extends AbstractAdapter
 {
     private $search;
-    
+
     private $config;
 
     public function __construct()
@@ -22,11 +22,11 @@ class ZendSearch extends AbstractAdapter
 
     public function addFile(\File\Info $file)
     {
-        if (!empty($this->searchFile($file->getPathname()))) {
+        if (count($this->searchFile($file->getPathname())) > 0) {
             syslog(LOG_INFO, "file {$file->getPathname()} already indexed");
             return;
         }
-        
+
         $document = new \Zend_Search_Lucene_Document();
         $document->addField(\Zend_Search_Lucene_Field::keyword('md5', $file->getNameMd5()));
         $document->addField(\Zend_Search_Lucene_Field::keyword('type', $file->isDir() ? 'dir' : 'file'));
@@ -49,7 +49,7 @@ class ZendSearch extends AbstractAdapter
     public function getDirectoryFiles(\File\Info $file)
     {
         $pathName = $file->isDir() ? $file->getPathname() : $file->getPath();
-        
+
         return $this->search->find("directory:\"$pathName\"");
     }
 
@@ -68,6 +68,16 @@ class ZendSearch extends AbstractAdapter
         $files = $this->search->find("md5:$hash");
 
         return array_shift($files);
+    }
+
+    public function optimize()
+    {
+        $this->search->optimize();
+    }
+
+    public function search($term)
+    {
+        return $this->search->find($term);
     }
 
 }

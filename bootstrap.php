@@ -18,6 +18,6 @@ spl_autoload_register(
         $class = str_replace("\\", DIRECTORY_SEPARATOR, $class);
         $class = str_replace("_", DIRECTORY_SEPARATOR, $class);
 
-        @include_once "$class.php";
+        include_once "$class.php";
     }
 );

@@ -6,7 +6,7 @@ class Search extends \FilterIterator implements \Countable
 {
     private $closure;
 
-    public function __construct(Iterator $iterator, \Closure $closure)
+    public function __construct(\Iterator $iterator, \Closure $closure)
     {
         parent::__construct($iterator);
         $this->closure = $closure;

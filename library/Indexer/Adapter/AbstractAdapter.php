@@ -15,12 +15,16 @@ abstract class AbstractAdapter
 
         return $adapter;
     }
-    
+
     abstract public function addFile(\File\Info $file);
-    
+
     abstract public function removeFile(\File\Info $file);
-    
+
     abstract public function searchFile($filename);
-    
+
+    abstract public function search($term);
+
     abstract public function getDirectoryFiles(\File\Info $file);
+
+    abstract public function optimize();
 }

@@ -5,26 +5,27 @@ namespace Daemon;
 class FileWatcher extends AbstractDaemon
 {
     private $inotify;
-    
+
     private $indexer;
 
     public function __construct()
     {
         $this->inotify = new \File\Watcher\Inotify();
         $this->indexer = new \Indexer\Manager();
-        
+
         $directoryIterator = new \RecursiveDirectoryIterator(
-            '/home/developer/teste crawler',
+            \Config\Ini::getInstance()->watcher->directory,
             \RecursiveDirectoryIterator::CURRENT_AS_SELF | \RecursiveDirectoryIterator::SKIP_DOTS
         );
 
         foreach (new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::CHILD_FIRST) as $file) {
             $info = $file->getFileInfo("\\File\\Info");
-            
+
             if ($file->isDir()) {
-                syslog("$file will be watched");
+                syslog(LOG_INFO, "$file will be watched");
                 $this->inotify->addFolder($info);
             } else {
+                syslog(LOG_INFO, "$file indexed");
                 $this->indexer->addFile($info);
             }
         }
@@ -34,7 +35,7 @@ class FileWatcher extends AbstractDaemon
     {
         $manager = new \File\Watcher\Event\Observer\Manager($this->inotify->readEvents());
         $manager->addObserver(
-            new \File\Watcher\Event\Observer\Subject\DisplayName(),
+            new \File\Watcher\Event\Observer\Subject\AddIndex(),
             new \Enum\EventType(\Enum\EventType::CREATED)
         );
         $manager->notify();
