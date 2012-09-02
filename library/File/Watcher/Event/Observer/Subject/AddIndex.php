@@ -4,20 +4,20 @@ namespace File\Watcher\Event\Observer\Subject;
 
 class AddIndex implements SubjectInterface
 {
+    /**
+     * @var \File\Watcher\Event\Filter\AbstractFilter
+     */
     private $events;
 
     public function execute()
     {
-        $manager = new \Pool\Manager();
+        $manager = new \File\Watcher\Event\Manager();
 
+        /* @var $event \File\Watcher\Event\Item */
         foreach ($this->events as $event) {
             $manager->add(
-                array(
-                    'name' => 'IndexFile',
-                    'args' => array(
-                        'file' => $event->getFile()->getPathname()
-                    )
-                )
+                $event->getFile(),
+                'indexFile'
             );
         }
     }
