@@ -19,6 +19,11 @@ class Manager
         $this->events = $events;
     }
 
+    /**
+     * @param \File\Watcher\Event\Observer\Subject\SubjectInterface $subject
+     * @param \Enum\EventType $type
+     * @return \File\Watcher\Event\Observer\Manager
+     */
     public function addObserver(Subject\SubjectInterface $subject, \Enum\EventType $type)
     {
         switch ($type->getValue()) {
@@ -37,6 +42,8 @@ class Manager
         }
 
         $this->subjects->attach($subject);
+
+        return $this;
     }
 
     public function notify()

@@ -14,6 +14,9 @@ class Manager
         $this->adapter = Adapter\AbstractAdapter::factory($this->config->indexer->adapter->name);
     }
 
+    /**
+     * @param \File\Info $file
+     */
     public function addFile(\File\Info $file)
     {
         $this->adapter->addFile($file);
@@ -34,17 +37,31 @@ class Manager
     }
 
     /**
-     * @param type $filename
+     * @param string $filename
      * @return File\Item
      */
     public function searchFile($filename)
     {
         $item = $this->adapter->searchFile($filename);
-        
+
         if (empty($item)) {
             return false;
         }
-        
+
         return new File\Item($item);
+    }
+
+    public function optmize()
+    {
+        $this->adapter->optimize();
+    }
+
+    /**
+     * @param string $term
+     * @return \Indexer\File\Collection
+     */
+    public function search($term)
+    {
+        return new File\Collection($this->adapter->search($term));
     }
 }

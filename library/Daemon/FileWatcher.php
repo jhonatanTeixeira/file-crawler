@@ -14,9 +14,11 @@ class FileWatcher extends AbstractDaemon
         $this->indexer = new \Indexer\Manager();
 
         $directoryIterator = new \RecursiveDirectoryIterator(
-            \Config\Ini::getInstance()->watcher->directory,
-            \RecursiveDirectoryIterator::CURRENT_AS_SELF | \RecursiveDirectoryIterator::SKIP_DOTS
+            \Config\Ini::getInstance()->watcher->directory
         );
+
+        $notIndexed = new \File\Collection($directoryIterator);
+        $notIndexed->addFilter(new \File\Filter\NotIndexed());
 
         foreach (new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::CHILD_FIRST) as $file) {
             $info = $file->getFileInfo("\\File\\Info");
@@ -36,6 +38,9 @@ class FileWatcher extends AbstractDaemon
         $manager = new \File\Watcher\Event\Observer\Manager($this->inotify->readEvents());
         $manager->addObserver(
             new \File\Watcher\Event\Observer\Subject\AddIndex(),
+            new \Enum\EventType(\Enum\EventType::CREATED)
+        )->addObserver(
+            new \File\Watcher\Event\Observer\Subject\MakePreview(),
             new \Enum\EventType(\Enum\EventType::CREATED)
         );
         $manager->notify();
