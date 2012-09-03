@@ -30,9 +30,6 @@ class Converter
     
     public function convert()
     {
-        $originMime = $this->origin->getMime();
         
-        $originExt = array_pop(explode('/', $originMime));
-        $targetExt = $this->target->getExtension();
     }
 }
