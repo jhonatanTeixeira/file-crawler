@@ -13,10 +13,9 @@ class Resizer
      */
     private $engine;
 
-    public function __construct(\File\Info $origin, \File\Info $target)
+    public function __construct(\File\Info $origin)
     {
         $this->setOrigin($origin);
-        $this->setTarget($target);
 
         $this->engine = Engine\AbstractEngine::factory(
             new \Enum\MediaOperation(\Enum\MediaOperation::RESIZE),

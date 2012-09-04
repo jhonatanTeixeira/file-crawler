@@ -69,7 +69,11 @@ class Pool extends AbstractDaemon
             case 0:
                 $this->isChild = true;
                 $action = \Action\AbstractAction::factory($actionRow->name, $actionRow->args);
-                $action->execute();
+                try {
+                    $action->execute();
+                } catch (Exception $exception) {
+                    syslog(LOG_ERR, $exception->getMessage());
+                }
                 exit;
             default:
                 pcntl_wait($status, WNOHANG | WUNTRACED);

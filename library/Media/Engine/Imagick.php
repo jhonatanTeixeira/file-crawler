@@ -5,12 +5,18 @@ namespace Media\Engine;
 class Imagick extends AbstractEngine
 {
     private $imagick;
-    
+
     public function __construct()
     {
-        $this->imagick = new \Imagick($this->getOrigin()->getPathname());
+        $this->imagick = new \Imagick();
     }
-    
+
+    public function setOrigin(\File\Info $origin)
+    {
+        parent::setOrigin($origin);
+        $this->imagick->readimage($origin->getPathname());
+    }
+
     public function convert()
     {
         $this->imagick->writeimage($this->getTarget()->getPathname());

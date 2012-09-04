@@ -27,11 +27,11 @@ class Info extends \SplFileInfo
 
     public function isImage()
     {
-        return (bool) preg_match('^image', $this->getMime());
+        return (bool) preg_match('/^image/', $this->getMime());
     }
 
     public function isVideo()
     {
-        return (bool) preg_match('^video', $this->getMime());
+        return (bool) preg_match('/^video/', $this->getMime());
     }
 }

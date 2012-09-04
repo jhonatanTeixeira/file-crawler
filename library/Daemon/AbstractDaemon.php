@@ -11,11 +11,17 @@ abstract class AbstractDaemon
         $pid = getmypid();
 
         if ($pid != $this->pid) {
-            
+
         }
 
         while (!\Proccess\Forker::isDying()) {
-            $this->excute();
+
+            try {
+                $this->excute();
+            } catch (Exception $exception) {
+                syslog(LOG_ERR, $exception->getMessage());
+            }
+
             $this->iterate(1);
         }
 

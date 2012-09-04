@@ -8,8 +8,12 @@ class MakePreview extends AbstractAction
     {
         $origin = new \File\Info($this->getParams('file'));
 
-        $resizer = new \Media\Resizer(new \Enum\MediaOperation(\Enum\MediaOperation::RESIZE), $origin);
-        $resizer->makePreview();
-        $resizer->makeThumb();
+        try {
+            $resizer = new \Media\Resizer($origin);
+            $resizer->makePreview();
+            $resizer->makeThumb();
+        } catch (\Exception $exception) {
+            syslog(LOG_ERR, $exception->getMessage());
+        }
     }
 }
