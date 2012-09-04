@@ -16,9 +16,20 @@ class Collection extends \FilterIterator
         parent::__construct($iterator);
     }
 
+    /**
+     * @param \File\Filter\FilterInterface $filter
+     * @return \File\Collection
+     */
     public function addFilter(Filter\FilterInterface $filter)
     {
         $this->filters[] = $filter;
+
+        return $this;
+    }
+
+    public function cleanFilters()
+    {
+        $this->filters = array();
     }
 
     /**

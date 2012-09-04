@@ -17,20 +17,21 @@ class FileWatcher extends AbstractDaemon
             \Config\Ini::getInstance()->watcher->directory
         );
 
-        $notIndexed = new \File\Collection($directoryIterator);
-        $notIndexed->addFilter(new \File\Filter\NotIndexed());
+        $directories = new \File\Collection($directoryIterator);
+        $directories->addFilter(new \File\Filter\IsDirectory());
 
-        foreach (new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::CHILD_FIRST) as $file) {
-            $info = $file->getFileInfo("\\File\\Info");
+        $files = new \File\Collection($directoryIterator);
+        $files->addFilter(new \File\Filter\NotIndexed())
+            ->addFilter(new \File\Filter\IsMedia());
 
-            if ($file->isDir()) {
-                syslog(LOG_INFO, "$file will be watched");
-                $this->inotify->addFolder($info);
-            } else {
-                syslog(LOG_INFO, "$file indexed");
-                $this->indexer->addFile($info);
-            }
-        }
+        $directoriesChain = new \File\Startup\Chain($directories);
+        $directoriesChain->addCommand(new \File\Startup\Command\AddInotify($this->inotify))
+            ->execute();
+
+        $filesChain = new \File\Startup\Chain($files);
+        $filesChain->addCommand(new \File\Startup\Command\AddIndex())
+            ->addCommand(new \File\Startup\Command\MakePreview())
+            ->execute();
     }
 
     protected function excute()
@@ -43,6 +44,7 @@ class FileWatcher extends AbstractDaemon
             new \File\Watcher\Event\Observer\Subject\MakePreview(),
             new \Enum\EventType(\Enum\EventType::CREATED)
         );
+        
         $manager->notify();
     }
 }
