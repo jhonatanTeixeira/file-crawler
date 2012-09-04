@@ -70,7 +70,8 @@ class Pool extends AbstractDaemon
                 $this->isChild = true;
                 $action = \Action\AbstractAction::factory($actionRow->name, $actionRow->args);
                 try {
-                    $action->execute();
+                    $action->setPid(getmypid());
+                    $action->invoke();
                 } catch (Exception $exception) {
                     syslog(LOG_ERR, $exception->getMessage());
                 }

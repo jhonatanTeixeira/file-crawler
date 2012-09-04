@@ -59,6 +59,7 @@ class Forker
                     break;
                 case 0:
                     $this->isDaemon = true;
+                    $daemon->setPid(getmypid());
                     $daemon->start();
                     break;
                 default:

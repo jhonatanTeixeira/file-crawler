@@ -11,7 +11,7 @@ abstract class AbstractDaemon
         $pid = getmypid();
 
         if ($pid != $this->pid) {
-
+            return;
         }
 
         while (!\Proccess\Forker::isDying()) {

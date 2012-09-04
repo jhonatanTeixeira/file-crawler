@@ -6,6 +6,8 @@ abstract class AbstractAction
 {
     private $params = array();
 
+    private $pid;
+
     /**
      * @param string $actionName
      * @param array $params
@@ -43,6 +45,25 @@ abstract class AbstractAction
         }
 
         return $this->params;
+    }
+
+    public function getPid()
+    {
+        return $this->pid;
+    }
+
+    public function setPid($pid)
+    {
+        $this->pid = $pid;
+    }
+
+    public function invoke()
+    {
+        if (getmypid() != $this->pid) {
+            return;
+        }
+
+        $this->execute();
     }
 
     abstract public function execute();
