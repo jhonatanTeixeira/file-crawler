@@ -15,23 +15,23 @@ class Manager
     }
 
     /**
-     * @param \File\Info $file
+     * @param \FileSystem\Entity $file
      */
-    public function addFile(\File\Info $file)
+    public function addFile(\FileSystem\Entity $file)
     {
         $this->adapter->addFile($file);
     }
 
     /**
-     * @param \File\Info $file
-     * @return \Indexer\File\Collection
+     * @param \FileSystem\Entity $file
+     * @return \Indexer\FileSystem\Collection
      */
-    public function getDirectoryFiles(\File\Info $file)
+    public function getDirectoryFiles(\FileSystem\Entity $file)
     {
         return new File\Collection($this->adapter->getDirectoryFiles($file));
     }
 
-    public function removeFile(\File\Info $file)
+    public function removeFile(\FileSystem\Entity $file)
     {
         $this->adapter->removeFile($file);
     }
@@ -58,7 +58,7 @@ class Manager
 
     /**
      * @param string $term
-     * @return \Indexer\File\Collection
+     * @return \Indexer\FileSystem\Collection
      */
     public function search($term)
     {

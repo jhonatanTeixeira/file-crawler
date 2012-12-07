@@ -12,4 +12,4 @@ $row = array('name' => $values['name']);
 unset($values['name']);
 $row['args'] = $values;
 
-$manager->add($row);
+$manager->add(new \Pool\Row($row));

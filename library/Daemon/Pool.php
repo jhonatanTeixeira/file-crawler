@@ -20,12 +20,31 @@ class Pool extends AbstractDaemon
     public function __construct()
     {
         pcntl_signal(SIGCHLD, array($this, 'childEnd'));
+        $this->startQueue();
+    }
+
+    public function start()
+    {
+        while (!\Proccess\Forker::isDying() && !$this->isChild) {
+            if (!$this->queue->valid() || $this->queue->isEmpty()) {
+                $this->startQueue();
+                continue;
+            }
+
+            if (count($this->children) == $this->maxChildren) {
+                continue;
+            }
+
+            $this->execute();
+            $this->queue->next();
+        }
     }
 
     public function childEnd($signal)
     {
         foreach ($this->children as $key => $pid) {
             pcntl_waitpid($pid, $status, WNOHANG | WUNTRACED);
+
             if ($pid > 0) {
                 unset($this->children[$key]);
                 syslog(LOG_INFO, "child finished with status $status, remaining " . count($this->children));
@@ -33,29 +52,11 @@ class Pool extends AbstractDaemon
         }
     }
 
-    protected function excute()
+    protected function execute()
     {
-        if ($this->isChild) {
-            return;
-        }
-
-        $this->startQueue();
-
-        if ($this->queue->count() === 0) {
-            return;
-        }
-
-        foreach ($this->queue as $actionRow) {
-            if (!(count($this->children) < $this->maxChildren)) {
-                return;
-            }
-
-            $this->fork($actionRow);
-
-            if (!$this->isChild) {
-                $this->manager->delete($actionRow->id);
-            }
-        }
+        $actionRow = $this->queue->current();
+        $this->fork($actionRow);
+        $this->manager->delete($actionRow);
     }
 
     private function fork($actionRow)
@@ -68,13 +69,15 @@ class Pool extends AbstractDaemon
                 break;
             case 0:
                 $this->isChild = true;
-                $action = \Action\AbstractAction::factory($actionRow->name, $actionRow->args);
+                $action = \Action\AbstractAction::factory($actionRow->getName(), $actionRow->getArgs());
+
                 try {
                     $action->setPid(getmypid());
                     $action->invoke();
                 } catch (Exception $exception) {
                     syslog(LOG_ERR, $exception->getMessage());
                 }
+
                 exit;
             default:
                 pcntl_wait($status, WNOHANG | WUNTRACED);
@@ -90,8 +93,11 @@ class Pool extends AbstractDaemon
 
         $this->queue = new \SplPriorityQueue();
 
-        foreach ($requests as $key => $request) {
-            $this->queue->insert((object) $request, $request['priority']);
+        /* @var $request \Pool\Collection */
+        foreach ($requests as $request) {
+            $this->queue->insert($request, $request->getPriority());
         }
+
+        $this->queue->rewind();
     }
 }

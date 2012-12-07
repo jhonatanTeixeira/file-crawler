@@ -8,20 +8,20 @@ class Converter
     
     private $target;
     
-    public function __construct(\File\Info $origin, \File\Info $target)
+    public function __construct(\FileSystem\Entity $origin, \FileSystem\Entity $target)
     {
         $this->setOrigin($origin);
         $this->setTarget($target);
     }
     
-    public function setOrigin(\File\Info $origin)
+    public function setOrigin(\FileSystem\Entity $origin)
     {
         $this->origin = $origin;
         
         return $this;
     }
 
-    public function setTarget(\File\Info $target)
+    public function setTarget(\FileSystem\Entity $target)
     {
         $this->target = $target;
         

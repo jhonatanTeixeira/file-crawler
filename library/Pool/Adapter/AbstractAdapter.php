@@ -23,7 +23,7 @@ abstract class AbstractAdapter
 
     abstract public function fetch();
 
-    abstract public function delete($id);
+    abstract public function delete(\Pool\Row $row);
 
-    abstract public function add(array $row);
+    abstract public function add(\Pool\Row $row);
 }

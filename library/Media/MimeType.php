@@ -4,7 +4,7 @@ namespace Media;
 
 class MimeType
 {
-    public static function getMime(\File\Info $file)
+    public static function getMime(\FileSystem\Entity $file)
     {
         $pathName = $file->getPathname();
         exec("mimetype $pathName", $result);

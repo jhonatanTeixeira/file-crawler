@@ -20,7 +20,7 @@ class ZendSearch extends AbstractAdapter
         }
     }
 
-    public function addFile(\File\Info $file)
+    public function addFile(\FileSystem\Entity $file)
     {
         if (count($this->searchFile($file->getPathname())) > 0) {
             syslog(LOG_INFO, "file {$file->getPathname()} already indexed");
@@ -46,14 +46,14 @@ class ZendSearch extends AbstractAdapter
         $this->search->commit();
     }
 
-    public function getDirectoryFiles(\File\Info $file)
+    public function getDirectoryFiles(\FileSystem\Entity $file)
     {
         $pathName = $file->isDir() ? $file->getPathname() : $file->getPath();
 
         return $this->search->find("directory:\"$pathName\"");
     }
 
-    public function removeFile(\File\Info $file)
+    public function removeFile(\FileSystem\Entity $file)
     {
 
     }

@@ -10,41 +10,35 @@ class FileWatcher extends AbstractDaemon
 
     public function __construct()
     {
-        $this->inotify = new \File\Watcher\Inotify();
+        $this->inotify = new \FileSystem\Watcher\Inotify();
         $this->indexer = new \Indexer\Manager();
 
-        $directoryIterator = new \RecursiveDirectoryIterator(
-            \Config\Ini::getInstance()->watcher->directory
+        $directories = new \FileSystem\Directory\Scanner(
+            new \FileSystem\Entity(\Config\Ini::getInstance()->watcher->directory)
         );
+        $directories->addCommand(new \FileSystem\Command\AddInotify($this->inotify))
+            ->executeCommands();
 
-        $directories = new \File\Collection($directoryIterator);
-        $directories->addFilter(new \File\Filter\IsDirectory());
-
-        $files = new \File\Collection($directoryIterator);
-        $files->addFilter(new \File\Filter\NotIndexed())
-            ->addFilter(new \File\Filter\IsMedia());
-
-        $directoriesChain = new \File\Startup\Chain($directories);
-        $directoriesChain->addCommand(new \File\Startup\Command\AddInotify($this->inotify))
-            ->execute();
-
-        $filesChain = new \File\Startup\Chain($files);
-        $filesChain->addCommand(new \File\Startup\Command\AddIndex())
-            ->addCommand(new \File\Startup\Command\MakePreview())
-            ->execute();
+        $media = new \FileSystem\Media\Scanner(
+            new \FileSystem\Entity(\Config\Ini::getInstance()->watcher->directory)
+        );
+        $media->addFilter(new \FileSystem\Filter\NotIndexed())
+            ->addCommand(new \FileSystem\Command\AddIndex())
+            ->addCommand(new \FileSystem\Command\MakePreview())
+            ->executeCommands();
     }
 
-    protected function excute()
+    protected function execute()
     {
-        $manager = new \File\Watcher\Event\Observer\Manager($this->inotify->readEvents());
+        $manager = new \FileSystem\Watcher\Event\Observer\Manager($this->inotify->readEvents());
         $manager->addObserver(
-            new \File\Watcher\Event\Observer\Subject\AddIndex(),
+            new \FileSystem\Watcher\Event\Observer\Subject\AddIndex(),
             new \Enum\EventType(\Enum\EventType::CREATED)
         )->addObserver(
-            new \File\Watcher\Event\Observer\Subject\MakePreview(),
+            new \FileSystem\Watcher\Event\Observer\Subject\MakePreview(),
             new \Enum\EventType(\Enum\EventType::CREATED)
         );
-        
+
         $manager->notify();
     }
 }

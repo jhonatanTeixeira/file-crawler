@@ -14,18 +14,20 @@ class Manager
         $this->adapter = Adapter\AbstractAdapter::factory($this->config->pool->adapter->name);
     }
 
-    public function add(array $row)
+    public function add(Row $row)
     {
-        if (!isset($row['priority'])) {
-            $row['priority'] = 0;
+        if ($row->hasPriority()) {
+            $row->setPriority(0);
         }
 
         $this->adapter->add($row);
+        $this->adapter->save();
     }
 
-    public function delete($id)
+    public function delete(Row $row)
     {
-        $this->adapter->delete($id);
+        $this->adapter->delete($row);
+        $this->adapter->save();
     }
 
     public function fetch()

@@ -17,7 +17,7 @@ abstract class AbstractDaemon
         while (!\Proccess\Forker::isDying()) {
 
             try {
-                $this->excute();
+                $this->execute();
             } catch (Exception $exception) {
                 syslog(LOG_ERR, $exception->getMessage());
             }
@@ -49,5 +49,5 @@ abstract class AbstractDaemon
         $this->pid = $pid;
     }
 
-    abstract protected function excute();
+    abstract protected function execute();
 }

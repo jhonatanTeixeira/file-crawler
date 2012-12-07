@@ -11,7 +11,7 @@ class Imagick extends AbstractEngine
         $this->imagick = new \Imagick();
     }
 
-    public function setOrigin(\File\Info $origin)
+    public function setOrigin(\FileSystem\Entity $origin)
     {
         parent::setOrigin($origin);
         $this->imagick->readimage($origin->getPathname());

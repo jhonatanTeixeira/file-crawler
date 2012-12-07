@@ -13,7 +13,7 @@ class Resizer
      */
     private $engine;
 
-    public function __construct(\File\Info $origin)
+    public function __construct(\FileSystem\Entity $origin)
     {
         $this->setOrigin($origin);
 
@@ -23,14 +23,14 @@ class Resizer
         );
     }
 
-    public function setOrigin(\File\Info $origin)
+    public function setOrigin(\FileSystem\Entity $origin)
     {
         $this->origin = $origin;
 
         return $this;
     }
 
-    public function setTarget(\File\Info $target)
+    public function setTarget(\FileSystem\Entity $target)
     {
         $this->target = $target;
 

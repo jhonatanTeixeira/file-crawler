@@ -6,75 +6,52 @@ class FileArray extends AbstractAdapter
 {
     private $config;
 
-    private $rowSet;
+    private $data;
 
     public function __construct()
     {
         $this->config = \Config\Ini::getInstance();
+        $this->data = new \Pool\Collection();
     }
 
-    public function add(array $row)
+    public function add(\Pool\Row $row)
     {
-        $content = $this->fetch();
-        $last = end($content);
-        $row['id'] = $last['id'] + 1;
-        $content[] = $row;
-        $this->save($content);
+        $this->data->append($row);
 
         return $this;
     }
 
-    public function save(array $content)
+    public function delete(\Pool\Row $row)
     {
-        file_put_contents($this->config->pool->adapter->file, serialize($content));
+        $this->data->remove($row);
 
         return $this;
     }
 
-    public function delete($id)
+    public function save()
     {
-        $index = $this->getIndexById($id);
-
-        if ($index === false) {
-            throw new \InvalidArgumentException("$id doesnt exists on the data");
-        }
-
-        $content = $this->fetch();
-        unset($content[$index]);
-        $this->save($content);
+        file_put_contents($this->config->pool->adapter->file, serialize($this->data));
 
         return $this;
     }
 
-    private function getIndexById($id)
-    {
-        $content = $this->fetch();
-
-        foreach ($content as $key => $row) {
-            if ($row['id'] == $id) {
-                return $key;
-            }
-        }
-
-        return false;
-    }
-
+    /**
+     * @return \Pool\Collection
+     */
     public function fetch()
     {
-        if (!isset($this->rowSet)) {
-            if (!file_exists($this->config->pool->adapter->file)) {
-                return array();
-            }
-
-            $content = unserialize(@file_get_contents($this->config->pool->adapter->file));
-
-            if ($content === false || !is_array($content)) {
-                $this->rowSet = array();
-            } else {
-                $this->rowSet = $content;
-            }
+        if (!file_exists($this->config->pool->adapter->file)) {
+            return $this->data;
         }
 
-        return $this->rowSet;
+        $content = unserialize(@file_get_contents($this->config->pool->adapter->file));
+
+        if ($content === false || !$content instanceof \Pool\Collection) {
+            return $this->data;
+        }
+
+        $this->data = $content;
+
+        return $this->data;
     }
 }

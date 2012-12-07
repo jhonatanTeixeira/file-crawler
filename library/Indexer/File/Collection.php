@@ -5,7 +5,7 @@ namespace Indexer\File;
 class Collection extends \ArrayIterator
 {
     /**
-     * @return \Indexer\File\Item
+     * @return \Indexer\FileSystem\Item
      */
     public function current()
     {

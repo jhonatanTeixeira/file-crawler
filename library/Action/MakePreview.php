@@ -6,7 +6,7 @@ class MakePreview extends AbstractAction
 {
     public function execute()
     {
-        $origin = new \File\Info($this->getParams('file'));
+        $origin = new \FileSystem\Entity($this->getParams('file'));
 
         try {
             $resizer = new \Media\Resizer($origin);

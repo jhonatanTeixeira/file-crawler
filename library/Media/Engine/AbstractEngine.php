@@ -7,16 +7,16 @@ abstract class AbstractEngine
     private static $config;
 
     /**
-     * @var \File\Info
+     * @var \FileSystem\Entity
      */
     private $origin;
 
     /**
-     * @var \File\Info
+     * @var \FileSystem\Entity
      */
     private $target;
 
-    public static function factory(\Enum\MediaOperation $opreration, \File\Info $origin, \File\Info $target = null)
+    public static function factory(\Enum\MediaOperation $opreration, \FileSystem\Entity $origin, \FileSystem\Entity $target = null)
     {
         if ($target !== null) {
             $targetExt = $target->getExtension();
@@ -63,12 +63,12 @@ abstract class AbstractEngine
         return self::$config;
     }
 
-    public function setTarget(\File\Info $target)
+    public function setTarget(\FileSystem\Entity $target)
     {
         $this->target = $target;
     }
 
-    public function setOrigin(\File\Info $origin)
+    public function setOrigin(\FileSystem\Entity $origin)
     {
         $this->origin = $origin;
     }
