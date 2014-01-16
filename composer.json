@@ -1,0 +1,14 @@
+{
+    "name": "vendor/file-crawler",
+    "description": "Description of project file_crawler.",
+    "authors": [
+        {
+            "name": "jhon",
+            "email": "your@email.here"
+        }
+    ],
+    "require": {
+        "symfony/console": "dev-master",
+        "symfony/stopwatch": "dev-master"
+    }
+}
