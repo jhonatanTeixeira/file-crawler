@@ -19,6 +19,8 @@ abstract class Forkable
     {
         $this->inputInterface   = $input;
         $this->eventDispatcher  = $eventDispatcher;
+        
+        $this->validateArguments($input);
     }
         
     public function getPid()
@@ -38,20 +40,34 @@ abstract class Forkable
     
     protected function validateArguments(InputInterface $input)
     {
-        $mandatoryArguments = $this->getArgumentMap();
-        $options = json_decode($input->getOption('params'), true);
-        
-        if (false === $options) {
-            throw new \InvalidArgumentException("{$input->getOption('params')} is not a valid json");
-        }
+        $mandatoryArguments = $this->getMandatoryArgumentMap();
+        $options = $input->getOption('params');
+        $options = $this->parseOptions($options);
         
         foreach ($mandatoryArguments as $mandatoryArgument) {
             if (!isset($options[$mandatoryArgument])) {
-                throw new \InvalidArgumentException("$mandatoryArgument is rquired on params json");
+                throw new \InvalidArgumentException("$mandatoryArgument is rquired on params options");
             }
         }
         
         $this->params = $options;
+    }
+    
+    protected function parseOptions($options)
+    {
+        $parsed = array();
+
+        foreach ($options as $option) {
+            $keyValues = explode('=', $option);
+
+            for ($i=0; $i < count($keyValues)-1; $i+=2) {
+                $value = $keyValues[$i+1];
+                $explodedValue = explode(',', $value);
+                $parsed[$keyValues[$i]] = count($explodedValue) > 1 ? $explodedValue : $explodedValue[0];
+            }
+        }
+        
+        return $parsed;
     }
     
     public function getParam($name, $default = null)

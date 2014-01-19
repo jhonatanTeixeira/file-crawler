@@ -11,9 +11,9 @@ class Collection extends \FilterIterator
         $content = inotify_read($inotify->getResource());
 
         if ($content !== false) {
-            parent::__construct($content);
+            parent::__construct(new \ArrayIterator($content));
         } else {
-            parent::__construct();
+            parent::__construct(new \ArrayIterator());
         }
 
         $this->inotify = $inotify;

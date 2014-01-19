@@ -28,6 +28,4 @@ abstract class AbstractFilter extends \FileSystem\Watcher\Event\Collection imple
     {
         return count(iterator_to_array($this));
     }
-    
-    public abstract function accept();
 }

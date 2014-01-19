@@ -16,7 +16,9 @@ class FileWatcher extends \Process\Daemon
         
         $this->inotify = new \FileSystem\Watcher\Inotify();
         
-        foreach ($this->getParam('folders', array()) as $folder) {
+        $folders = (array) $this->getParam('folders', array());
+        
+        foreach ($folders as $folder) {
             $this->inotify->addFolder(
                 new \FileSystem\Entity($folder)
             );
