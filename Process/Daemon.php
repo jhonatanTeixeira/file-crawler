@@ -1,6 +1,6 @@
 <?php
 
-namespace Procees;
+namespace Process;
 
 abstract class Daemon extends Forkable
 {
@@ -8,11 +8,11 @@ abstract class Daemon extends Forkable
     {
         $pid = getmypid();
 
-        if ($pid != $this->pid) {
+        if ($pid != $this->getPid()) {
             return;
         }
 
-        while (!\Proccess\Forker::isDying()) {
+        while (!\Process\Forker::isDying()) {
 
             try {
                 $this->execute();

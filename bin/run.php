@@ -19,6 +19,7 @@ $stopWatch->start('application');
 
 $application = new \Symfony\Component\Console\Application();
 $application->add(new \Command\HelloWorld());
+$application->add(new \Command\StartProcess());
 $application->setAutoExit(false);
 $exitCode = $application->run();
 

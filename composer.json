@@ -9,6 +9,13 @@
     ],
     "require": {
         "symfony/console": "dev-master",
-        "symfony/stopwatch": "dev-master"
+        "symfony/stopwatch": "dev-master",
+        "symfony/event-dispatcher": "dev-master",
+        "guzzle/guzzle": "dev-master",
+        "elasticsearch/elasticsearch": "dev-master",
+        "ext-pcntl": "*",
+        "ext-posix": "*",
+        "ext-amqp" : "*",
+        "ext-inotify" : "*"
     }
 }

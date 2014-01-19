@@ -1,12 +1,13 @@
 <?php
 
-namespace FileSystem\Media;
+namespace FileSystem\Directory;
 
 class Scanner extends \FileSystem\Scanner
 {
+
     protected function addDefaultFilters()
     {
-        $this->addFilter(new \FileSystem\Filter\IsMedia());
+        $this->addFilter(new \FileSystem\Filter\IsDirectory());
     }
 
     protected function getInfoClassName()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Proccess;
+namespace Process;
 
 class Forker
 {
