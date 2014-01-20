@@ -13,8 +13,9 @@ class NewFile implements \Symfony\Component\EventDispatcher\EventSubscriberInter
 
     public function onFileCreated(\FileSystem\Watcher\Event $fileEvents)
     {
+        /* @var $fileEvent \FileSystem\Watcher\Event\Item */
         foreach ($fileEvents->getFileEvents() as $fileEvent) {
-            echo $fileEvent;
+            echo $fileEvent->getFile() . "\n";
         }
     }
 }

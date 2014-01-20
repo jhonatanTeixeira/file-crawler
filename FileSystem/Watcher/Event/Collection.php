@@ -6,22 +6,33 @@ class Collection extends \FilterIterator
 {
     private $inotify;
 
-    public function __construct(\FileSystem\Watcher\Inotify $inotify)
+    public function __construct($inotify)
     {
-        $content = inotify_read($inotify->getResource());
+        if ($inotify instanceof \FileSystem\Watcher\Inotify) {
+            $content = inotify_read($inotify->getResource());
 
-        if ($content !== false) {
-            parent::__construct(new \ArrayIterator($content));
-        } else {
-            parent::__construct(new \ArrayIterator());
+            if ($content !== false) {
+                parent::__construct(new \ArrayIterator($content));
+            } else {
+                parent::__construct(new \ArrayIterator());
+            }
+    
+            $this->inotify = $inotify;
+        } elseif ($inotify instanceof Collection) {
+            parent::__construct($inotify);
+            $this->inotify = $inotify->getInotify();
         }
-
-        $this->inotify = $inotify;
     }
 
     public function current()
     {
-        return new Item(parent::current(), $this->inotify);
+        $current = parent::current();
+        
+        if ($current instanceof Item) {
+            return $current;
+        }
+        
+        return new Item($current, $this->inotify);
     }
 
     public function getInotify()
