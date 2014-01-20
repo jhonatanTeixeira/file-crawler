@@ -1,10 +1,10 @@
 {
     "name": "vendor/file-crawler",
-    "description": "Description of project file_crawler.",
+    "description": "A file watcher and daemon system made with php",
     "authors": [
         {
             "name": "jhon",
-            "email": "your@email.here"
+            "email": "jhonatan.teixeira@gmail.com"
         }
     ],
     "require": {
@@ -16,6 +16,7 @@
         "ext-pcntl": "*",
         "ext-posix": "*",
         "ext-amqp" : "*",
-        "ext-inotify" : "*"
+        "ext-inotify": "*",
+        "ext-imagick": "*"
     }
 }
